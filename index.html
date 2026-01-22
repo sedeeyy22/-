@@ -26,8 +26,7 @@
         .card:hover { border-color: #d32f2f; transform: translateY(-5px); }
         .price { color: #ffca28; font-weight: bold; font-size: 1.3rem; margin-top: 10px; }
         .btn-buy { background: #2e7d32; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 10px; cursor: pointer; font-weight: bold; width: 100%; }
-        .btn-buy:hover { background: #388e3c; }
-
+        
         /* نافذة الشراء المنبثقة */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
         .modal-content { background: #151515; margin: 10% auto; padding: 25px; border: 1px solid #d32f2f; width: 350px; border-radius: 15px; }
@@ -42,12 +41,11 @@
 <div id="request-screen" class="container">
     <h2>📜 طلب تصريح دخول</h2>
     <div class="price-tag">قيمة التصريح: 850€</div>
-    <form action="https://formspree.io/f/s3od3386@gmail.com" method="POST">
-        <input type="email" name="user_email" placeholder="أدخل إيميلك الشخصي" required>
-        <input type="text" name="discord_user" placeholder="يوزر الديسكورد" required>
-        <button type="submit" class="btn-submit">ارسال النموذج</button>
-        <div class="support-text">في حال واجهت مشكلة توجه مباشرة إلى <span>سعود</span> اليوزر: <span>dr7_511</span></div>
-    </form>
+    <input type="email" id="req-email" placeholder="أدخل إيميلك الشخصي" required>
+    <input type="text" id="req-discord" placeholder="يوزر الديسكورد" required>
+    <button class="btn-submit" onclick="sendToDiscord('request')">ارسال النموذج</button>
+    <div class="support-text">في حال واجهت مشكلة توجه مباشرة إلى <span>سعود</span> اليوزر: <span>dr7_511</span></div>
+    
     <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
         <input type="text" id="access-code" placeholder="كود القبول">
         <button class="btn-submit" onclick="unlockStore()" style="background: #2e7d32;">دخول المتجر</button>
@@ -71,30 +69,57 @@
 <div id="buyModal" class="modal">
     <div class="modal-content">
         <h3 id="weaponTitle" style="color: #d32f2f;">شراء سلاح</h3>
-        <form action="https://formspree.io/f/s3od3386@gmail.com" method="POST">
-            <input type="hidden" id="selectedWeapon" name="Weapon_Ordered">
-            <input type="text" name="Discord_User" placeholder="يوزرك دس" required>
-            <input type="text" name="Roblox_User" placeholder="يوزرك روبلوكس" required>
-            <input type="text" name="Discord_ID" placeholder="ايديك ديسكورد" required>
-            <button type="submit" class="btn-submit">تأكيد الشراء</button>
-        </form>
+        <input type="text" id="buy-discord" placeholder="يوزرك دس" required>
+        <input type="text" id="buy-roblox" placeholder="يوزرك روبلوكس" required>
+        <input type="text" id="buy-id" placeholder="ايديك ديسكورد" required>
+        <button class="btn-submit" onclick="sendToDiscord('buy')">تأكيد الشراء</button>
         <button onclick="closeBuy()" style="background:none; border:none; color:#888; cursor:pointer; margin-top:10px;">إلغاء</button>
     </div>
 </div>
 
 <script>
+    const webhookURL = "https://discord.com/api/webhooks/1464045319414218782/ffUEwKy9mG_tfbpFAA-6Q8rTYE5AqmI33jfzfy3KALH2BOZ6_Nz7ctplWt7bjnNHauK-";
+    let selectedWeapon = "";
+
     function unlockStore() {
         if(document.getElementById('access-code').value === "SA") {
             document.getElementById('request-screen').style.display = 'none';
             document.getElementById('weapons-menu').style.display = 'block';
         } else { alert("كود القبول خاطئ!"); }
     }
+
     function openBuy(weaponName) {
+        selectedWeapon = weaponName;
         document.getElementById('weaponTitle').innerText = "طلب شراء: " + weaponName;
-        document.getElementById('selectedWeapon').value = weaponName;
         document.getElementById('buyModal').style.display = 'block';
     }
+
     function closeBuy() { document.getElementById('buyModal').style.display = 'none'; }
+
+    function sendToDiscord(type) {
+        let content = "";
+        if (type === 'request') {
+            const email = document.getElementById('req-email').value;
+            const discord = document.getElementById('req-discord').value;
+            if(!email || !discord) return alert("يرجى تعبئة البيانات");
+            content = `📜 **طلب تصريح جديد**\n📧 الإيميل: ${email}\n🎮 الديسكورد: ${discord}`;
+        } else {
+            const dsc = document.getElementById('buy-discord').value;
+            const roblox = document.getElementById('buy-roblox').value;
+            const id = document.getElementById('buy-id').value;
+            if(!dsc || !roblox || !id) return alert("يرجى تعبئة البيانات");
+            content = `🛒 **طلب شراء سلاح**\n🔫 السلاح: ${selectedWeapon}\n👤 يوزر دس: ${dsc}\n🎮 يوزر روبلوكس: ${roblox}\n🆔 ايدي دس: ${id}`;
+        }
+
+        fetch(webhookURL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: content })
+        }).then(() => {
+            alert("تم إرسال الطلب بنجاح!");
+            closeBuy();
+        }).catch(() => alert("حدث خطأ في الإرسال"));
+    }
 </script>
 </body>
 </html>
