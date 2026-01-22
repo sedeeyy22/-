@@ -22,36 +22,33 @@
 
         #weapons-menu { display: none; padding: 40px; max-width: 1100px; margin: 0 auto; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
-        .card { background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 12px; transition: 0.3s; }
+        .card { background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 12px; transition: 0.3s; position: relative; }
         .card:hover { border-color: #d32f2f; transform: translateY(-5px); }
         .price { color: #ffca28; font-weight: bold; font-size: 1.3rem; margin-top: 10px; }
-        .icon { font-size: 50px; display: block; margin-bottom: 10px; }
-        
+        .btn-buy { background: #2e7d32; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 10px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-buy:hover { background: #388e3c; }
+
+        /* نافذة الشراء المنبثقة */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+        .modal-content { background: #151515; margin: 10% auto; padding: 25px; border: 1px solid #d32f2f; width: 350px; border-radius: 15px; }
+
         footer { margin-top: 50px; color: #444; font-size: 0.8rem; padding-bottom: 20px; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>INSIDE CITY ARMORY</h1>
-</header>
+<header><h1>INSIDE CITY ARMORY</h1></header>
 
 <div id="request-screen" class="container">
     <h2>📜 طلب تصريح دخول</h2>
     <div class="price-tag">قيمة التصريح: 850€</div>
-    
     <form action="https://formspree.io/f/s3od3386@gmail.com" method="POST">
         <input type="email" name="user_email" placeholder="أدخل إيميلك الشخصي" required>
         <input type="text" name="discord_user" placeholder="يوزر الديسكورد" required>
         <button type="submit" class="btn-submit">ارسال النموذج</button>
-        
-        <div class="support-text">
-            في حال واجهت مشكلة توجه مباشرة إلى <span>سعود</span> اليوزر: <span>dr7_511</span>
-        </div>
+        <div class="support-text">في حال واجهت مشكلة توجه مباشرة إلى <span>سعود</span> اليوزر: <span>dr7_511</span></div>
     </form>
-
     <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
-        <p style="color: #888; font-size: 0.8rem;">أدخل كود القبول لفتح المتجر:</p>
         <input type="text" id="access-code" placeholder="كود القبول">
         <button class="btn-submit" onclick="unlockStore()" style="background: #2e7d32;">دخول المتجر</button>
     </div>
@@ -60,33 +57,44 @@
 <div id="weapons-menu">
     <h2 style="color: #d32f2f; margin-bottom: 30px;">متجر أسلحة انسايد ستي</h2>
     <div class="grid">
-        <div class="card"><span class="icon">🔭</span><h3>M24</h3><p class="price">3,200€</p></div>
-        <div class="card"><span class="icon">🔫</span><h3>G36</h3><p class="price">3,000€</p></div>
-        <div class="card"><span class="icon">⚔️</span><h3>AK47</h3><p class="price">2,300€</p></div>
-        <div class="card"><span class="icon">💣</span><h3>قنبلة لاصقة</h3><p class="price">2,000€</p></div>
-        <div class="card"><span class="icon">⚡</span><h3>MP5</h3><p class="price">780€</p></div>
-        <div class="card"><span class="icon">💨</span><h3>ماك 10</h3><p class="price">500€</p></div>
-        <div class="card"><span class="icon">🎯</span><h3>P99</h3><p class="price">60€</p></div>
-        <div class="card"><span class="icon">🔪</span><h3>سكين</h3><p class="price">مجاني</p></div>
+        <div class="card"><h3>M24</h3><p class="price">3,200€</p><button class="btn-buy" onclick="openBuy('M24')">شراء الأن</button></div>
+        <div class="card"><h3>G36</h3><p class="price">3,000€</p><button class="btn-buy" onclick="openBuy('G36')">شراء الأن</button></div>
+        <div class="card"><h3>AK47</h3><p class="price">2,300€</p><button class="btn-buy" onclick="openBuy('AK47')">شراء الأن</button></div>
+        <div class="card"><h3>قنبلة لاصقة</h3><p class="price">2,000€</p><button class="btn-buy" onclick="openBuy('قنبلة لاصقة')">شراء الأن</button></div>
+        <div class="card"><h3>MP5</h3><p class="price">780€</p><button class="btn-buy" onclick="openBuy('MP5')">شراء الأن</button></div>
+        <div class="card"><h3>ماك 10</h3><p class="price">500€</p><button class="btn-buy" onclick="openBuy('ماك 10')">شراء الأن</button></div>
+        <div class="card"><h3>P99</h3><p class="price">60€</p><button class="btn-buy" onclick="openBuy('P99')">شراء الأن</button></div>
+        <div class="card"><h3>سكين</h3><p class="price">مجاني</p><button class="btn-buy" onclick="openBuy('سكين')">شراء الأن</button></div>
     </div>
 </div>
 
-<footer>
-    &copy; 2026 INSIDE CITY ARMORY | s3od3386@gmail.com
-</footer>
+<div id="buyModal" class="modal">
+    <div class="modal-content">
+        <h3 id="weaponTitle" style="color: #d32f2f;">شراء سلاح</h3>
+        <form action="https://formspree.io/f/s3od3386@gmail.com" method="POST">
+            <input type="hidden" id="selectedWeapon" name="Weapon_Ordered">
+            <input type="text" name="Discord_User" placeholder="يوزرك دس" required>
+            <input type="text" name="Roblox_User" placeholder="يوزرك روبلوكس" required>
+            <input type="text" name="Discord_ID" placeholder="ايديك ديسكورد" required>
+            <button type="submit" class="btn-submit">تأكيد الشراء</button>
+        </form>
+        <button onclick="closeBuy()" style="background:none; border:none; color:#888; cursor:pointer; margin-top:10px;">إلغاء</button>
+    </div>
+</div>
 
 <script>
     function unlockStore() {
-        var code = document.getElementById('access-code').value;
-        // تم تغيير الكود هنا إلى SA بناءً على طلبك
-        if(code === "SA") {
+        if(document.getElementById('access-code').value === "SA") {
             document.getElementById('request-screen').style.display = 'none';
             document.getElementById('weapons-menu').style.display = 'block';
-        } else {
-            alert("كود القبول خاطئ!");
-        }
+        } else { alert("كود القبول خاطئ!"); }
     }
+    function openBuy(weaponName) {
+        document.getElementById('weaponTitle').innerText = "طلب شراء: " + weaponName;
+        document.getElementById('selectedWeapon').value = weaponName;
+        document.getElementById('buyModal').style.display = 'block';
+    }
+    function closeBuy() { document.getElementById('buyModal').style.display = 'none'; }
 </script>
-
 </body>
 </html>
