@@ -2,69 +2,77 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Elite Armory | نظام التصاريح</title>
+    <title>Elite Armory | متجر النخبة</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #0a0a0a; color: #eee; margin: 0; padding: 0; }
-        header { background: #1a1a1a; padding: 30px; text-align: center; border-bottom: 3px solid #d32f2f; }
-        header h1 { color: #d32f2f; margin: 0; text-transform: uppercase; }
-        
-        #license-screen { max-width: 450px; margin: 50px auto; background: #151515; padding: 30px; border-radius: 15px; border: 1px solid #252525; text-align: center; }
-        .price-box { background: #d32f2f; padding: 10px; border-radius: 8px; font-weight: bold; margin: 15px 0; font-size: 1.2rem; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #0a0a0a; color: #eee; margin: 0; padding: 0; text-align: center; }
+        header { background: #1a1a1a; padding: 30px; border-bottom: 3px solid #d32f2f; }
+        header h1 { color: #d32f2f; margin: 0; letter-spacing: 2px; }
+
+        /* شاشة النموذج */
+        #request-screen { max-width: 450px; margin: 50px auto; background: #151515; padding: 30px; border-radius: 15px; border: 1px solid #252525; }
+        .price-tag { background: #d32f2f; padding: 10px; border-radius: 8px; font-weight: bold; margin: 15px 0; }
         input { width: 90%; padding: 12px; margin: 10px 0; background: #222; border: 1px solid #444; color: white; border-radius: 5px; text-align: center; }
-        
-        .btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-send { background: #d32f2f; color: white; }
-        .btn-discord { background: #5865F2; color: white; }
-        .btn-view { background: #444; color: white; }
-        
-        #weapons-menu { display: none; padding: 40px; max-width: 1200px; margin: 0 auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .card { background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 12px; text-align: center; }
-        .price { color: #ffca28; font-size: 1.3rem; font-weight: bold; }
-        footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; }
+        .btn-submit { width: 100%; padding: 15px; margin-top: 20px; border: none; border-radius: 5px; background: #d32f2f; color: white; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background: #ff0000; box-shadow: 0 0 15px #d32f2f; }
+
+        /* قائمة الأسلحة - مخفية وتظهر بعد القبول */
+        #weapons-menu { display: none; padding: 40px; max-width: 1100px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .card { background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 12px; transition: 0.3s; }
+        .card:hover { border-color: #d32f2f; transform: translateY(-5px); }
+        .price { color: #ffca28; font-weight: bold; font-size: 1.3rem; }
+        .icon { font-size: 50px; display: block; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-<header><h1>ELITE ARMORY</h1></header>
+<header>
+    <h1>ELITE ARMORY</h1>
+</header>
 
-<div id="license-screen">
+<div id="request-screen">
     <h2>📜 طلب تصريح دخول</h2>
-    <div class="price-box">قيمة التصريح: 850€</div>
+    <div class="price-tag">قيمة التصريح: 850€</div>
+    
     <form action="https://formspree.io/f/s3od3386@gmail.com" method="POST">
-        <input type="email" name="Email" placeholder="إيميلك الشخصي" required>
-        <input type="text" id="dsc-user" name="Discord_User" placeholder="يوزر الديسكورد" required>
-        <button type="submit" class="btn btn-send">إرسال الطلب (850€)</button>
+        <input type="email" name="user_email" placeholder="أدخل إيميلك الشخصي" required>
+        <input type="text" name="discord_username" placeholder="يوزر الديسكورد" required>
+        <button type="submit" class="btn-submit">ارسال النموذج</button>
     </form>
-    <button class="btn btn-view" onclick="alert('اليوزر: ' + document.getElementById('dsc-user').value)">رؤية اليوزر</button>
-    <button class="btn btn-discord">قبول الديسكورد</button>
-    <hr style="border: 0.5px solid #333; margin: 20px 0;">
-    <input type="text" id="access-code" placeholder="أدخل كود القبول">
-    <button class="btn btn-send" onclick="unlock()" style="background: #2e7d32;">دخول المتجر</button>
-</div>
 
-<div id="weapons-menu">
-    <div class="grid">
-        <div class="card"><span>🔭</span><h3>M24</h3><p class="price">3,200€</p></div>
-        <div class="card"><span>🔫</span><h3>G36</h3><p class="price">3,000€</p></div>
-        <div class="card"><span>⚔️</span><h3>AK47</h3><p class="price">2,300€</p></div>
-        <div class="card"><span>💣</span><h3>قنبلة لاصقة</h3><p class="price">2,000€</p></div>
-        <div class="card"><span>⚡</span><h3>MP5</h3><p class="price">780€</p></div>
-        <div class="card"><span>💨</span><h3>ماك 10</h3><p class="price">500€</p></div>
-        <div class="card"><span>🎯</span><h3>P99</h3><p class="price">60€</p></div>
-        <div class="card"><span>🔪</span><h3>سكين</h3><p class="price">مجاني</p></div>
+    <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
+        <p style="color: #888; font-size: 0.8rem;">إذا وصلك كود القبول من الإدارة، أدخله هنا:</p>
+        <input type="text" id="access-code" placeholder="أدخل كود الوصول">
+        <button class="btn-submit" onclick="unlockStore()" style="background: #2e7d32;">دخول المتجر</button>
     </div>
 </div>
 
-<footer>&copy; 2026 ELITE ARMORY | s3od3386@gmail.com</footer>
+<div id="weapons-menu">
+    <h2 style="color: #d32f2f; margin-bottom: 30px;">قائمة التجهيزات المتاحة</h2>
+    <div class="grid">
+        <div class="card"><span class="icon">🔭</span><h3>M24</h3><p class="price">3,200€</p></div>
+        <div class="card"><span class="icon">🔫</span><h3>G36</h3><p class="price">3,000€</p></div>
+        <div class="card"><span class="icon">⚔️</span><h3>AK47</h3><p class="price">2,300€</p></div>
+        <div class="card"><span class="icon">💣</span><h3>قنبلة لاصقة</h3><p class="price">2,000€</p></div>
+        <div class="card"><span class="icon">⚡</span><h3>MP5</h3><p class="price">780€</p></div>
+        <div class="card"><span class="icon">💨</span><h3>ماك 10</h3><p class="price">500€</p></div>
+        <div class="card"><span class="icon">🎯</span><h3>P99</h3><p class="price">60€</p></div>
+        <div class="card"><span class="icon">🔪</span><h3>سكين</h3><p class="price">مجاني</p></div>
+    </div>
+</div>
 
 <script>
-    function unlock() {
-        if(document.getElementById('access-code').value === "ADMIN-OK") {
-            document.getElementById('license-screen').style.display = 'none';
+    function unlockStore() {
+        var code = document.getElementById('access-code').value;
+        // كود الدخول الافتراضي (يمكنك تغييره)
+        if(code === "OK-2026") {
+            document.getElementById('request-screen').style.display = 'none';
             document.getElementById('weapons-menu').style.display = 'block';
-        } else { alert("الكود خاطئ!"); }
+        } else {
+            alert("كود القبول غير صحيح!");
+        }
     }
 </script>
+
 </body>
 </html>
