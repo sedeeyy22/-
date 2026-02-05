@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>انسايد ديزاين</title>
+    <title>انسايد | ديزاين</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -11,6 +11,9 @@
         .hero-grad { background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(147,51,234,0.1) 100%); }
         #orderModal { display: none; }
         #orderModal.active { display: flex; }
+        /* أنيميشن بسيط لظهور الحقول */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="bg-slate-900 text-white overflow-x-hidden">
@@ -31,10 +34,10 @@
     <section id="home" class="min-h-screen flex items-center justify-center pt-20 hero-grad">
         <div class="max-w-4xl text-center px-6">
             <span class="px-4 py-1 rounded-full border border-blue-500/30 text-blue-400 text-sm font-bold mb-6 inline-block animate-pulse">
-                طاقم انسايد ديزاين
+                تخضع الروس لعتابه الابه
             </span>
-            <h1 class="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">مستقبل التصاميم <br><span class="text-blue-500">يبدأ من هنا</span></h1>
-            <p class="text-lg opacity-70 mb-10 max-w-2xl mx-auto italic">اطلب تصميمك الآن واحصل على احترافية لا مثيل لها في "انسايد ديزاين".</p>
+            <h1 class="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">مستقبل التصاميم <br><span class="text-blue-500">يبدأ بلمسة</span></h1>
+            <p class="text-lg opacity-70 mb-10 max-w-2xl mx-auto italic">حول رؤيتك إلى واقع. اطلب تصميمك الآن من خلال النموذج الذكي.</p>
             <div class="flex flex-wrap justify-center gap-4">
                 <button onclick="toggleModal()" class="bg-blue-600 px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-900/20 hover:-translate-y-1 transition active:scale-95">
                     طلب تصميم
@@ -51,9 +54,9 @@
             
             <form id="designForm" class="space-y-5 text-right" dir="rtl">
                 <div>
-                    <label class="block mb-2 font-bold text-sm">نوع التصميم:</label>
-                    <select id="type" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500">
-                        <option value="طلب تصميم">طلب تصميم</option>
+                    <label class="block mb-2 font-bold text-sm">نوع الطلب:</label>
+                    <select id="type" onchange="handleTypeChange()" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition-all">
+                        <option value="طلب تصميم">طلب تصميم جديد</option>
                         <option value="تعديل على تصميم">تعديل على تصميم</option>
                     </select>
                 </div>
@@ -73,12 +76,17 @@
                 </div>
 
                 <div>
+                    <label class="block mb-2 font-bold text-sm">كيف تبي التصميم؟ (وصف):</label>
+                    <textarea id="description" rows="3" placeholder="اشرح لنا فكرتك أو الألوان المفضلة..." required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500 resize-none"></textarea>
+                </div>
+
+                <div>
                     <label class="block mb-2 font-bold text-sm">يوزرك ديسكورد:</label>
                     <input type="text" id="discordUser" placeholder="مثال: name_1" required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500">
                 </div>
 
-                <div>
-                    <label class="block mb-2 font-bold text-sm">ارفق الصورة (اجباري):</label>
+                <div id="imageSection" class="hidden fade-in">
+                    <label class="block mb-2 font-bold text-sm text-yellow-400 italic">ارفق الصورة المطلوب تعديلها:</label>
                     <input type="file" id="imageInput" accept="image/*" class="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
                 </div>
 
@@ -98,6 +106,22 @@
             document.getElementById('orderModal').classList.toggle('active');
         }
 
+        // دالة لإظهار/إخفاء قسم الصورة بناءً على نوع الطلب
+        function handleTypeChange() {
+            const type = document.getElementById('type').value;
+            const imageSection = document.getElementById('imageSection');
+            const imageInput = document.getElementById('imageInput');
+
+            if (type === "تعديل على تصميم") {
+                imageSection.classList.remove('hidden');
+                imageInput.required = true; // نجعله إلزامي في حالة التعديل
+            } else {
+                imageSection.classList.add('hidden');
+                imageInput.required = false;
+                imageInput.value = ""; // مسح الملف إذا غير رأيه
+            }
+        }
+
         const form = document.getElementById('designForm');
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -109,19 +133,20 @@
 
             const type = document.getElementById('type').value;
             const style = document.querySelector('input[name="style"]:checked').value;
+            const description = document.getElementById('description').value;
             const discordUser = document.getElementById('discordUser').value;
             const imageFile = document.getElementById('imageInput').files[0];
 
-            // إعداد رسالة الويب هوك كـ FormData لإمكانية إرفاق ملفات حقيقية
             const formData = new FormData();
             
             const embed = {
                 title: "🎨 طلب تصميم جديد!",
-                color: 5814783,
+                color: type === "تعديل على تصميم" ? 16776960 : 3447003,
                 fields: [
-                    { name: "📋 نوع التصميم", value: type, inline: true },
+                    { name: "📋 نوع الطلب", value: type, inline: true },
                     { name: "✨ شكل التصميم", value: style, inline: true },
-                    { name: "👤 يوزر الديسكورد", value: discordUser, inline: false }
+                    { name: "👤 يوزر الديسكورد", value: discordUser, inline: false },
+                    { name: "📝 وصف الطلب", value: description, inline: false }
                 ],
                 footer: { text: "تم الإرسال من الموقع الرسمي لـ انسايد ديزاين" },
                 timestamp: new Date()
@@ -129,8 +154,7 @@
 
             formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
             
-            // إذا كانت هناك صورة، أرفقها بالرسالة
-            if (imageFile) {
+            if (imageFile && type === "تعديل على تصميم") {
                 formData.append('file', imageFile);
             }
 
@@ -143,12 +167,13 @@
                 if (response.ok) {
                     alert('تم إرسال طلبك بنجاح!');
                     form.reset();
+                    handleTypeChange(); // إعادة إخفاء حقل الصورة
                     toggleModal();
                 } else {
-                    alert('فشل الإرسال، تأكد من إعدادات الويب هوك.');
+                    alert('حدث خطأ في الإرسال.');
                 }
             } catch (error) {
-                alert('حدث خطأ في الاتصال.');
+                alert('فشل الاتصال.');
             } finally {
                 submitBtn.innerText = "إرسال الطلب";
                 submitBtn.disabled = false;
