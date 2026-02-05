@@ -22,7 +22,6 @@
     <header class="fixed w-full z-50 backdrop-blur-md border-b border-white/10 bg-slate-900/50">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="text-2xl font-black tracking-tighter uppercase text-blue-500">انسايد ديزاين</div>
-            
             <div class="flex items-center gap-3">
                 <button id="adminLoginBtn" onclick="adminLogin()" class="border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-full text-xs font-bold transition-all">
                     تسجيل دخول إداري
@@ -50,13 +49,19 @@
             <button onclick="closeModal('orderModal')" class="absolute top-4 left-4 opacity-50 hover:opacity-100">✕</button>
             <h2 class="text-2xl font-black mb-6 text-center text-blue-400">نموذج الطلب</h2>
             <form id="orderForm" class="space-y-4" dir="rtl">
-                <select id="type" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none">
+                <select id="type" onchange="toggleOrderUpload()" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500">
                     <option value="طلب تصميم">طلب تصميم جديد</option>
                     <option value="تعديل على تصميم">تعديل على تصميم</option>
                 </select>
-                <textarea id="desc" placeholder="اشرح لنا فكرتك..." required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none h-24"></textarea>
-                <input type="text" id="user" placeholder="يوزرك ديسكورد" required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none">
-                <button type="submit" class="w-full bg-blue-600 py-4 rounded-xl font-black">إرسال للديسكورد</button>
+
+                <div id="orderUploadSection" class="hidden space-y-2 fade-in">
+                    <label class="block text-sm text-gray-400 mr-1">ارفق التصميم المراد تعديله:</label>
+                    <input type="file" id="orderImg" accept="image/*" class="w-full bg-slate-900 border border-dashed border-white/20 rounded-xl px-4 py-3 text-sm">
+                </div>
+
+                <textarea id="desc" placeholder="اشرح لنا فكرتك..." required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none h-24 focus:border-blue-500"></textarea>
+                <input type="text" id="user" placeholder="يوزرك ديسكورد" required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500">
+                <button type="submit" class="w-full bg-blue-600 py-4 rounded-xl font-black hover:bg-blue-700 transition">إرسال للديسكورد</button>
             </form>
         </div>
     </div>
@@ -82,19 +87,35 @@
                 <h2 class="text-4xl font-black">معرض المبدعين</h2>
                 <div id="adminStatus" class="hidden text-xs bg-red-500/20 text-red-400 px-3 py-1 rounded-full border border-red-500/50">وضع الإدارة نشط</div>
             </div>
-            <div id="galleryGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                </div>
+            <div id="galleryGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </div>
     </section>
 
     <script>
         const webhook = "https://discord.com/api/webhooks/1468926747868397660/sUfnL3eHPPYJ5dwceNZwwnAJhy-UVbDf0wVOYVa6DBW_mwxtSMDKo2C8tyPWInDiNtFn";
-        const ADMIN_CODE = "انسايد ديزاين"; // الكود السري الخاص بك
+        const ADMIN_CODE = "انسايد ديزاين";
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        
+        function closeModal(id) { 
+            document.getElementById(id).classList.remove('active');
+            if(id === 'orderModal') {
+                document.getElementById('orderForm').reset();
+                toggleOrderUpload(); // لإخفاء حقل الإرفاق عند إعادة الفتح
+            }
+        }
 
-        // تسجيل دخول الإدارة
+        // التحكم في ظهور حقل إرفاق الصورة في نموذج الطلب
+        function toggleOrderUpload() {
+            const typeSelect = document.getElementById('type');
+            const uploadSection = document.getElementById('orderUploadSection');
+            if (typeSelect.value === "تعديل على تصميم") {
+                uploadSection.classList.remove('hidden');
+            } else {
+                uploadSection.classList.add('hidden');
+            }
+        }
+
         function adminLogin() {
             const code = prompt("أدخل كود الإدارة للمتابعة:");
             if (code === ADMIN_CODE) {
@@ -102,31 +123,26 @@
                 document.getElementById('adminStatus').classList.remove('hidden');
                 document.getElementById('adminLoginBtn').innerText = "تم تسجيل الدخول";
                 document.getElementById('adminLoginBtn').classList.replace('text-red-400', 'text-green-400');
-                alert("أهلاً بك أيها المدير. يمكنك الآن حذف أي تصميم غير لائق.");
+                alert("أهلاً بك أيها المدير.");
             } else {
-                alert("الكود خاطئ! لا تملك صلاحيات.");
+                alert("الكود خاطئ!");
             }
         }
 
-        // حذف التصميم
         function deleteDesign(button) {
             if(confirm("هل أنت متأكد من حذف هذا التصميم؟")) {
                 button.parentElement.remove();
             }
         }
 
-        // نشر التصميم في المعرض
         document.getElementById('showOffForm').onsubmit = function(e) {
             e.preventDefault();
             const name = document.getElementById('artistName').value;
             const file = document.getElementById('artistImg').files[0];
-            
             const reader = new FileReader();
             reader.onload = function(event) {
                 const imgData = event.target.result;
                 const galleryGrid = document.getElementById('galleryGrid');
-                
-                // إنشاء الكارد مع زر الحذف الإداري
                 const card = document.createElement('div');
                 card.className = "group bg-slate-800 p-4 rounded-3xl border border-white/5 relative fade-in";
                 card.innerHTML = `
@@ -136,16 +152,12 @@
                     </div>
                     <p class="font-bold text-lg text-center text-blue-400">${name}</p>
                 `;
-                
                 galleryGrid.prepend(card);
-                
-                // إرسال للديسكورد كإشعار
                 fetch(webhook, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ content: `🎨 المبدع **${name}** أضاف تصميماً جديداً للموقع!` })
                 });
-
                 alert('تم نشر تصميمك بنجاح!');
                 closeModal('showOffModal');
                 document.getElementById('showOffForm').reset();
@@ -153,10 +165,23 @@
             reader.readAsDataURL(file);
         };
 
-        // نموذج الطلب الأساسي
         document.getElementById('orderForm').onsubmit = async (e) => {
             e.preventDefault();
-            alert('جاري إرسال الطلب للديسكورد...');
+            const type = document.getElementById('type').value;
+            const desc = document.getElementById('desc').value;
+            const user = document.getElementById('user').value;
+            
+            // إشعار بسيط (يمكنك لاحقاً تطويره لإرسال الصورة الفعلية للويب هوك)
+            alert(`تم استلام طلبك (${type}). جاري إبلاغ الإدارة على ديسكورد...`);
+            
+            fetch(webhook, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ 
+                    content: `🆕 **طلب جديد وصل!**\n**النوع:** ${type}\n**المستخدم:** ${user}\n**الوصف:** ${desc}` 
+                })
+            });
+
             closeModal('orderModal');
         };
     </script>
