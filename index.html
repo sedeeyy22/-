@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الموقع الخرافي | ديسكورد</title>
+    <title>انسايد ديزاين | طلب تصميم</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Tajawal', sans-serif; scroll-behavior: smooth; }
         .hero-grad { background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(147,51,234,0.1) 100%); }
         .feature-card:hover { transform: translateY(-10px); transition: all 0.3s ease; }
+        /* استايل النافذة المنبثقة */
+        #orderModal { display: none; }
+        #orderModal.active { display: flex; }
     </style>
 </head>
 <body class="bg-slate-900 text-white overflow-x-hidden">
 
     <header class="fixed w-full z-50 backdrop-blur-md border-b border-white/10 bg-slate-900/50">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-black tracking-tighter uppercase text-blue-500">خرافي ديزاين</div>
+            <div class="text-2xl font-black tracking-tighter uppercase text-blue-500">انسايد ديزاين</div>
             <nav class="hidden md:flex gap-8 font-medium">
                 <a href="#home" class="hover:text-blue-400 transition">الرئيسية</a>
                 <a href="#features" class="hover:text-blue-400 transition">المميزات</a>
-                <a href="#about" class="hover:text-blue-400 transition">من نحن</a>
             </nav>
-            <a href="https://discord.gg/kEduPHKb" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-bold transition-all active:scale-95">
+            <a href="https://discord.gg/kEduPHKb" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full text-sm font-bold transition-all active:scale-95">
                 انضم للديسكورد
             </a>
         </div>
@@ -31,78 +33,150 @@
     <section id="home" class="min-h-screen flex items-center justify-center pt-20 hero-grad">
         <div class="max-w-4xl text-center px-6">
             <span class="px-4 py-1 rounded-full border border-blue-500/30 text-blue-400 text-sm font-bold mb-6 inline-block animate-pulse">
-                انسايد ديزاين
+                تخضع الروس لعتابه الابه
             </span>
-            <h1 class="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">مستقبل المواقع <br><span class="text-blue-500">يبدأ من هنا</span></h1>
-            <p class="text-lg opacity-70 mb-10 max-w-2xl mx-auto italic">نحن نصنع مجتمعات رقمية متكاملة. انضم إلينا الآن عبر الديسكورد لمتابعة آخر التطورات.</p>
+            <h1 class="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">مستقبل التصاميم <br><span class="text-blue-500">بين يديك</span></h1>
+            <p class="text-lg opacity-70 mb-10 max-w-2xl mx-auto italic">نحن نحول خيالك إلى واقع رقمي. اطلب تصميمك الآن ودعنا نبهرك بالنتيجة.</p>
             <div class="flex flex-wrap justify-center gap-4">
-                <a href="https://discord.gg/kEduPHKb" target="_blank" class="bg-blue-600 px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-900/20 hover:-translate-y-1 transition active:scale-95">
-                    دخول السيرفر
-                </a>
+                <button onclick="toggleModal()" class="bg-blue-600 px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-900/20 hover:-translate-y-1 transition active:scale-95">
+                    طلب تصميم جديد
+                </button>
                 <button id="portfolioBtn" class="border border-white/20 px-8 py-4 rounded-xl font-bold hover:bg-white/5 transition active:scale-95">عرض الأعمال</button>
             </div>
         </div>
     </section>
 
+    <div id="orderModal" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-slate-800 border border-white/10 w-full max-w-lg rounded-3xl p-8 relative shadow-2xl">
+            <button onclick="toggleModal()" class="absolute top-4 left-4 text-white/50 hover:text-white text-xl">✕</button>
+            
+            <h2 class="text-2xl font-black mb-6 text-center text-blue-400">نموذج طلب التصميم</h2>
+            
+            <form id="designForm" class="space-y-6">
+                <div>
+                    <label class="block mb-2 font-bold text-sm">نوع الطلب:</label>
+                    <select id="type" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 focus:border-blue-500 outline-none">
+                        <option value="طلب تصميم جديد">طلب تصميم جديد</option>
+                        <option value="تعديل على تصميم">تعديل على تصميم</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-bold text-sm">شكل التصميم:</label>
+                    <div class="flex gap-4">
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="style" value="متحرك" class="hidden peer" checked>
+                            <div class="p-3 text-center border border-white/10 rounded-xl peer-checked:bg-blue-600 peer-checked:border-blue-600 transition">متحرك</div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="style" value="ثابت" class="hidden peer">
+                            <div class="p-3 text-center border border-white/10 rounded-xl peer-checked:bg-blue-600 peer-checked:border-blue-600 transition">ثابت</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-bold text-sm">يوزرك في ديسكورد:</label>
+                    <input type="text" id="discordUser" placeholder="Example#0000" required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 focus:border-blue-500 outline-none">
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 py-4 rounded-xl font-black hover:bg-blue-700 transition active:scale-95 shadow-lg shadow-blue-500/20">
+                    إرسال الطلب الآن
+                </button>
+            </form>
+        </div>
+    </div>
+
     <section id="features" class="py-32 px-6 bg-slate-900">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-20">
-                <h2 class="text-4xl font-black mb-4">لماذا تختارنا؟</h2>
+                <h2 class="text-4xl font-black mb-4">لماذا نحن؟</h2>
                 <div class="h-1 w-20 bg-blue-600 mx-auto"></div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="feature-card p-10 rounded-3xl border border-white/10 hover:border-blue-500/50 transition bg-slate-800/50">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+                <div class="feature-card p-10 rounded-3xl border border-white/10 bg-slate-800/50">
                     <div class="text-4xl mb-6">⚡</div>
-                    <h3 class="text-2xl font-bold mb-4">سرعة الاستجابة</h3>
-                    <p class="opacity-60 leading-relaxed">فريقنا متواجد دائماً في الديسكورد للرد على استفساراتكم بأسرع وقت.</p>
+                    <h3 class="text-xl font-bold mb-2">تسليم سريع</h3>
+                    <p class="opacity-50 text-sm">نحن نقدر وقتك، طلبك يتم تنفيذه بأقصى سرعة ممكنة.</p>
                 </div>
-                <div class="feature-card p-10 rounded-3xl border border-white/10 hover:border-blue-500/50 transition bg-white/5">
-                    <div class="text-4xl mb-6">💬</div>
-                    <h3 class="text-2xl font-bold mb-4">مجتمع تفاعلي</h3>
-                    <p class="opacity-60 leading-relaxed">تواصل مع المبدعين وشارك أفكارك في بيئة ملهمة واحترافية.</p>
+                <div class="feature-card p-10 rounded-3xl border border-white/10 bg-slate-800/50">
+                    <div class="text-4xl mb-6">💎</div>
+                    <h3 class="text-xl font-bold mb-2">جودة احترافية</h3>
+                    <p class="opacity-50 text-sm">تصاميم عصرية تناسب جميع الأذواق والاحتياجات.</p>
                 </div>
-                <div class="feature-card p-10 rounded-3xl border border-white/10 hover:border-blue-500/50 transition bg-slate-800/50">
-                    <div class="text-4xl mb-6">🔒</div>
-                    <h3 class="text-2xl font-bold mb-4">دعم فني</h3>
-                    <p class="opacity-60 leading-relaxed">نقدم حلولاً تقنية مباشرة ودعماً مستمراً لكل أعضاء مجتمعنا.</p>
+                <div class="feature-card p-10 rounded-3xl border border-white/10 bg-slate-800/50">
+                    <div class="text-4xl mb-6">🛡️</div>
+                    <h3 class="text-xl font-bold mb-2">دعم مستمر</h3>
+                    <p class="opacity-50 text-sm">نحن معك حتى بعد التسليم لأي تعديلات تطلبها.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-20 border-t border-white/10 bg-black/40">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
-            <div>
-                <div class="text-2xl font-black mb-4 text-blue-500">خرافي ديزاين</div>
-                <p class="opacity-50 text-sm max-w-xs">الإبداع لا حدود له، انضم لرحلتنا الآن.</p>
-            </div>
-            <div class="text-center md:text-left">
-                <p class="font-bold mb-2">رابط الديسكورد</p>
-                <a href="https://discord.gg/kEduPHKb" class="text-blue-400 hover:underline">discord.gg/kEduPHKb</a>
-            </div>
-        </div>
-        <div class="mt-20 text-center text-xs opacity-30">
-            جميع الحقوق محفوظة © 2026 | تم التطوير بواسطة نظام الذكاء الخرافي
-        </div>
+    <footer class="py-10 border-t border-white/10 text-center opacity-30 text-xs">
+        جميع الحقوق محفوظة © 2026 | انسايد ديزاين
     </footer>
 
     <script>
-        // تأثير بسيط عند الضغط على زر عرض الأعمال
-        document.getElementById('portfolioBtn').addEventListener('click', () => {
-            alert('طاقم المطورين يعملون قريباً..');
-        });
+        // فتح وإغلاق النافذة المنبثقة
+        function toggleModal() {
+            const modal = document.getElementById('orderModal');
+            modal.classList.toggle('active');
+        }
 
-        // تغيير مظهر الهيدر عند التمرير
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.classList.add('py-2', 'bg-slate-900/90');
-                header.classList.remove('py-4', 'bg-slate-900/50');
-            } else {
-                header.classList.add('py-4', 'bg-slate-900/50');
-                header.classList.remove('py-2', 'bg-slate-900/90');
+        // إرسال البيانات للويب هوك
+        const form = document.getElementById('designForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const type = document.getElementById('type').value;
+            const style = document.querySelector('input[name="style"]:checked').value;
+            const discordUser = document.getElementById('discordUser').value;
+
+            submitBtn.innerText = "جاري الإرسال...";
+            submitBtn.disabled = true;
+
+            const webhookURL = "https://discord.com/api/webhooks/1468926747868397660/sUfnL3eHPPYJ5dwceNZwwnAJhy-UVbDf0wVOYVa6DBW_mwxtSMDKo2C8tyPWInDiNtFn";
+
+            const payload = {
+                username: "بوت طلبات التصميم",
+                embeds: [{
+                    title: "🔔 طلب تصميم جديد!",
+                    color: 3447003,
+                    fields: [
+                        { name: "📋 نوع الطلب", value: type, inline: true },
+                        { name: "🎨 شكل التصميم", value: style, inline: true },
+                        { name: "👤 يوزر الديسكورد", value: discordUser, inline: false }
+                    ],
+                    footer: { text: "تم الإرسال من الموقع الرسمي" },
+                    timestamp: new Date()
+                }]
+            };
+
+            try {
+                const response = await fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert('تم إرسال طلبك بنجاح! تفقد الديسكورد قريباً.');
+                    form.reset();
+                    toggleModal();
+                } else {
+                    alert('حدث خطأ أثناء الإرسال، يرجى المحاولة لاحقاً.');
+                }
+            } catch (error) {
+                alert('فشل الاتصال بالخادم.');
+            } finally {
+                submitBtn.innerText = "إرسال الطلب الآن";
+                submitBtn.disabled = false;
             }
         });
+
+        document.getElementById('portfolioBtn').addEventListener('click', () => alert('معرض الأعمال سيفتح قريباً!'));
     </script>
 </body>
 </html>
