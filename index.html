@@ -3,81 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${name} | الموقع الخرافي</title>
+    <title>الموقع الخرافي | ديسكورد</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Tajawal', sans-serif; scroll-behavior: smooth; }
         .hero-grad { background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(147,51,234,0.1) 100%); }
+        .feature-card:hover { transform: translateY(-10px); transition: all 0.3s ease; }
     </style>
 </head>
-<body class="${theme} overflow-x-hidden">
+<body class="bg-slate-900 text-white overflow-x-hidden">
 
-    <header class="fixed w-full z-50 backdrop-blur-md border-b border-white/10">
+    <header class="fixed w-full z-50 backdrop-blur-md border-b border-white/10 bg-slate-900/50">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-black tracking-tighter uppercase">${name}</div>
+            <div class="text-2xl font-black tracking-tighter uppercase text-blue-500">خرافي ديزاين</div>
             <nav class="hidden md:flex gap-8 font-medium">
                 <a href="#home" class="hover:text-blue-400 transition">الرئيسية</a>
                 <a href="#features" class="hover:text-blue-400 transition">المميزات</a>
                 <a href="#about" class="hover:text-blue-400 transition">من نحن</a>
             </nav>
-            <button class="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-bold">اتصل بنا</button>
+            <a href="https://discord.gg/kEduPHKb" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-bold transition-all active:scale-95">
+                انضم للديسكورد
+            </a>
         </div>
     </header>
 
     <section id="home" class="min-h-screen flex items-center justify-center pt-20 hero-grad">
         <div class="max-w-4xl text-center px-6">
-            <span class="px-4 py-1 rounded-full border border-blue-500/30 text-blue-400 text-sm font-bold mb-6 inline-block">تخضع الروس لعتابه الابه</span>
+            <span class="px-4 py-1 rounded-full border border-blue-500/30 text-blue-400 text-sm font-bold mb-6 inline-block animate-pulse">
+                تخضع الروس لعتابه الابه
+            </span>
             <h1 class="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">مستقبل المواقع <br><span class="text-blue-500">يبدأ من هنا</span></h1>
-            <p class="text-lg opacity-70 mb-10 max-w-2xl mx-auto italic">مرحباً بك في ${name}. نحن هنا لنصنع لك تجربة رقمية تفوق التوقعات وتجعل رؤيتك حقيقة ملموسة.</p>
+            <p class="text-lg opacity-70 mb-10 max-w-2xl mx-auto italic">نحن نصنع مجتمعات رقمية متكاملة. انضم إلينا الآن عبر الديسكورد لمتابعة آخر التطورات.</p>
             <div class="flex flex-wrap justify-center gap-4">
-                <a href="#features" class="bg-blue-600 px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-900/20 hover:-translate-y-1 transition">اكتشف المزيد</a>
-                <button class="border border-white/20 px-8 py-4 rounded-xl font-bold hover:bg-white/5 transition">عرض الأعمال</button>
+                <a href="https://discord.gg/kEduPHKb" target="_blank" class="bg-blue-600 px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-900/20 hover:-translate-y-1 transition active:scale-95">
+                    دخول السيرفر
+                </a>
+                <button id="portfolioBtn" class="border border-white/20 px-8 py-4 rounded-xl font-bold hover:bg-white/5 transition active:scale-95">عرض الأعمال</button>
             </div>
         </div>
     </section>
 
-    <section id="features" class="py-32 px-6">
+    <section id="features" class="py-32 px-6 bg-slate-900">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-20">
                 <h2 class="text-4xl font-black mb-4">لماذا تختارنا؟</h2>
                 <div class="h-1 w-20 bg-blue-600 mx-auto"></div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="p-10 rounded-3xl border border-white/10 hover:border-blue-500/50 transition">
+                <div class="feature-card p-10 rounded-3xl border border-white/10 hover:border-blue-500/50 transition bg-slate-800/50">
                     <div class="text-4xl mb-6">⚡</div>
-                    <h3 class="text-2xl font-bold mb-4">أداء صاروخي</h3>
-                    <p class="opacity-60 leading-relaxed">نستخدم أحدث تقنيات الويب لضمان سرعة تحميل لا تتجاوز الأجزاء من الثانية.</p>
+                    <h3 class="text-2xl font-bold mb-4">سرعة الاستجابة</h3>
+                    <p class="opacity-60 leading-relaxed">فريقنا متواجد دائماً في الديسكورد للرد على استفساراتكم بأسرع وقت.</p>
                 </div>
-                <div class="p-10 rounded-3xl border border-white/10 hover:border-blue-500/50 transition bg-white/5">
-                    <div class="text-4xl mb-6">🎨</div>
-                    <h3 class="text-2xl font-bold mb-4">تصميم إبداعي</h3>
-                    <p class="opacity-60 leading-relaxed">كل بكسل في ${name} مدروس بعناية ليعكس هوية مشروعك بأفضل صورة.</p>
+                <div class="feature-card p-10 rounded-3xl border border-white/10 hover:border-blue-500/50 transition bg-white/5">
+                    <div class="text-4xl mb-6">💬</div>
+                    <h3 class="text-2xl font-bold mb-4">مجتمع تفاعلي</h3>
+                    <p class="opacity-60 leading-relaxed">تواصل مع المبدعين وشارك أفكارك في بيئة ملهمة واحترافية.</p>
                 </div>
-                <div class="p-10 rounded-3xl border border-white/10 hover:border-blue-500/50 transition">
+                <div class="feature-card p-10 rounded-3xl border border-white/10 hover:border-blue-500/50 transition bg-slate-800/50">
                     <div class="text-4xl mb-6">🔒</div>
-                    <h3 class="text-2xl font-bold mb-4">أمان مطلق</h3>
-                    <p class="opacity-60 leading-relaxed">حماية بياناتك هي أولويتنا القصوى، نطبق معايير أمان عالمية.</p>
+                    <h3 class="text-2xl font-bold mb-4">دعم فني</h3>
+                    <p class="opacity-60 leading-relaxed">نقدم حلولاً تقنية مباشرة ودعماً مستمراً لكل أعضاء مجتمعنا.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-20 border-t border-white/10 bg-black/20">
+    <footer class="py-20 border-t border-white/10 bg-black/40">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
             <div>
-                <div class="text-2xl font-black mb-4">${name}</div>
-                <p class="opacity-50 text-sm max-w-xs">نحن نؤمن بأن الإبداع لا حدود له، وأن التكنولوجيا هي الأداة لتحقيق المستحيل.</p>
+                <div class="text-2xl font-black mb-4 text-blue-500">خرافي ديزاين</div>
+                <p class="opacity-50 text-sm max-w-xs">الإبداع لا حدود له، انضم لرحلتنا الآن.</p>
             </div>
             <div class="text-center md:text-left">
-                <p class="font-bold mb-2">تواصل معنا</p>
-                <p class="opacity-50">info@${name.replace(/\s+/g, '').toLowerCase()}.com</p>
+                <p class="font-bold mb-2">رابط الديسكورد</p>
+                <a href="https://discord.gg/kEduPHKb" class="text-blue-400 hover:underline">discord.gg/kEduPHKb</a>
             </div>
         </div>
         <div class="mt-20 text-center text-xs opacity-30">
-            ${rights} © 2026 | تم التطوير بواسطة نظام الذكاء الخرافي
+            جميع الحقوق محفوظة © 2026 | تم التطوير بواسطة نظام الذكاء الخرافي
         </div>
     </footer>
 
+    <script>
+        // تأثير بسيط عند الضغط على زر عرض الأعمال
+        document.getElementById('portfolioBtn').addEventListener('click', () => {
+            alert('سيتم فتح معرض الأعمال قريباً!');
+        });
+
+        // تغيير مظهر الهيدر عند التمرير
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('py-2', 'bg-slate-900/90');
+                header.classList.remove('py-4', 'bg-slate-900/50');
+            } else {
+                header.classList.add('py-4', 'bg-slate-900/50');
+                header.classList.remove('py-2', 'bg-slate-900/90');
+            }
+        });
+    </script>
 </body>
 </html>
