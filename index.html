@@ -9,10 +9,12 @@
     <style>
         body { font-family: 'Tajawal', sans-serif; scroll-behavior: smooth; }
         .hero-grad { background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(147,51,234,0.1) 100%); }
-        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
         .modal.active { display: flex; }
-        .fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .admin-only { display: none; }
+        body.admin-mode .admin-only { display: block; }
     </style>
 </head>
 <body class="bg-slate-900 text-white overflow-x-hidden">
@@ -20,22 +22,25 @@
     <header class="fixed w-full z-50 backdrop-blur-md border-b border-white/10 bg-slate-900/50">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="text-2xl font-black tracking-tighter uppercase text-blue-500">انسايد ديزاين</div>
-            <nav class="hidden md:flex gap-8 font-medium">
-                <a href="#home" class="hover:text-blue-400 transition">الرئيسية</a>
-                <a href="#gallery" class="hover:text-blue-400 transition">معرض التصاميم</a>
-            </nav>
-            <a href="https://discord.gg/kEduPHKb" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full text-sm font-bold transition">انضم للديسكورد</a>
+            
+            <div class="flex items-center gap-3">
+                <button id="adminLoginBtn" onclick="adminLogin()" class="border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-full text-xs font-bold transition-all">
+                    تسجيل دخول إداري
+                </button>
+                <a href="https://discord.gg/kEduPHKb" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full text-sm font-bold transition">
+                    انضم للديسكورد
+                </a>
+            </div>
         </div>
     </header>
 
     <section id="home" class="min-h-screen flex items-center justify-center pt-20 hero-grad">
         <div class="max-w-4xl text-center px-6">
             <span class="px-4 py-1 rounded-full border border-blue-500/30 text-blue-400 text-sm font-bold mb-6 inline-block animate-pulse">تخضع الروس لعتابه الابه</span>
-            <h1 class="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">أظهر إبداعك للعالم</h1>
+            <h1 class="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">ميز نفسك في <br><span class="text-blue-500">انسايد ديزاين</span></h1>
             <div class="flex flex-wrap justify-center gap-4">
                 <button onclick="openModal('orderModal')" class="bg-blue-600 px-8 py-4 rounded-xl font-bold shadow-lg hover:-translate-y-1 transition active:scale-95">طلب تصميم</button>
                 <button onclick="openModal('showOffModal')" class="border border-white/20 px-8 py-4 rounded-xl font-bold hover:bg-white/5 transition active:scale-95">ميز نفسك</button>
-                <a href="#gallery" class="bg-white/10 px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition">عرض التصاميم</a>
             </div>
         </div>
     </section>
@@ -45,17 +50,13 @@
             <button onclick="closeModal('orderModal')" class="absolute top-4 left-4 opacity-50 hover:opacity-100">✕</button>
             <h2 class="text-2xl font-black mb-6 text-center text-blue-400">نموذج الطلب</h2>
             <form id="orderForm" class="space-y-4" dir="rtl">
-                <select id="type" onchange="handleTypeChange()" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none">
+                <select id="type" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none">
                     <option value="طلب تصميم">طلب تصميم جديد</option>
                     <option value="تعديل على تصميم">تعديل على تصميم</option>
                 </select>
                 <textarea id="desc" placeholder="اشرح لنا فكرتك..." required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none h-24"></textarea>
                 <input type="text" id="user" placeholder="يوزرك ديسكورد" required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none">
-                <div id="imgSec" class="hidden">
-                    <label class="block text-xs mb-1 text-yellow-400">ارفق الصورة للتعديل:</label>
-                    <input type="file" id="orderImg" accept="image/*" class="w-full text-xs">
-                </div>
-                <button type="submit" class="w-full bg-blue-600 py-4 rounded-xl font-black">إرسال الطلب</button>
+                <button type="submit" class="w-full bg-blue-600 py-4 rounded-xl font-black">إرسال للديسكورد</button>
             </form>
         </div>
     </div>
@@ -65,85 +66,98 @@
             <button onclick="closeModal('showOffModal')" class="absolute top-4 left-4 opacity-50 hover:opacity-100">✕</button>
             <h2 class="text-2xl font-black mb-6 text-center text-purple-400">ميز نفسك 🚀</h2>
             <form id="showOffForm" class="space-y-4" dir="rtl">
-                <input type="text" id="artistName" placeholder="اسمك المستعار" required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none">
+                <input type="text" id="artistName" placeholder="اسمك" required class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 outline-none">
                 <div>
-                    <label class="block text-sm mb-2">ارفق تصميمك المبدع:</label>
+                    <label class="block text-sm mb-2">ارفق تصميمك:</label>
                     <input type="file" id="artistImg" accept="image/*" required class="w-full text-sm">
                 </div>
-                <button type="submit" class="w-full bg-purple-600 py-4 rounded-xl font-black hover:bg-purple-700 transition">نشر في معرض المبدعين</button>
+                <button type="submit" class="w-full bg-purple-600 py-4 rounded-xl font-black transition">نشر في المعرض</button>
             </form>
         </div>
     </div>
 
-    <section id="gallery" class="py-32 px-6 bg-slate-900/50">
+    <section id="gallery" class="py-32 px-6">
         <div class="max-w-7xl mx-auto">
-            <h2 class="text-4xl font-black mb-12 text-center">معرض المبدعين</h2>
-            <div id="galleryGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-4xl font-black">معرض المبدعين</h2>
+                <div id="adminStatus" class="hidden text-xs bg-red-500/20 text-red-400 px-3 py-1 rounded-full border border-red-500/50">وضع الإدارة نشط</div>
+            </div>
+            <div id="galleryGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 </div>
         </div>
     </section>
 
     <script>
         const webhook = "https://discord.com/api/webhooks/1468926747868397660/sUfnL3eHPPYJ5dwceNZwwnAJhy-UVbDf0wVOYVa6DBW_mwxtSMDKo2C8tyPWInDiNtFn";
+        const ADMIN_CODE = "top Design"; // الكود السري الخاص بك
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        function handleTypeChange() {
-            const sec = document.getElementById('imgSec');
-            sec.className = document.getElementById('type').value === "تعديل على تصميم" ? "fade-in" : "hidden";
+        // تسجيل دخول الإدارة
+        function adminLogin() {
+            const code = prompt("أدخل كود الإدارة للمتابعة:");
+            if (code === ADMIN_CODE) {
+                document.body.classList.add('admin-mode');
+                document.getElementById('adminStatus').classList.remove('hidden');
+                document.getElementById('adminLoginBtn').innerText = "تم تسجيل الدخول";
+                document.getElementById('adminLoginBtn').classList.replace('text-red-400', 'text-green-400');
+                alert("أهلاً بك أيها المدير. يمكنك الآن حذف أي تصميم غير لائق.");
+            } else {
+                alert("الكود خاطئ! لا تملك صلاحيات.");
+            }
         }
 
-        // إرسال طلب تصميم
-        document.getElementById('orderForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const formData = new FormData();
-            const payload = {
-                embeds: [{
-                    title: "🎨 طلب تصميم!",
-                    fields: [
-                        { name: "النوع", value: document.getElementById('type').value, inline: true },
-                        { name: "اليوزر", value: document.getElementById('user').value, inline: true },
-                        { name: "الوصف", value: document.getElementById('desc').value }
-                    ]
-                }]
-            };
-            formData.append('payload_json', JSON.stringify(payload));
-            if (document.getElementById('orderImg').files[0]) formData.append('file', document.getElementById('orderImg').files[0]);
-            
-            await fetch(webhook, { method: 'POST', body: formData });
-            alert('تم الإرسال!');
-            closeModal('orderModal');
-        };
+        // حذف التصميم
+        function deleteDesign(button) {
+            if(confirm("هل أنت متأكد من حذف هذا التصميم؟")) {
+                button.parentElement.remove();
+            }
+        }
 
-        // إرسال ميز نفسك وحفظها محلياً
-        document.getElementById('showOffForm').onsubmit = async (e) => {
+        // نشر التصميم في المعرض
+        document.getElementById('showOffForm').onsubmit = function(e) {
             e.preventDefault();
             const name = document.getElementById('artistName').value;
             const file = document.getElementById('artistImg').files[0];
             
             const reader = new FileReader();
-            reader.onload = async function(event) {
+            reader.onload = function(event) {
                 const imgData = event.target.result;
-                
-                // 1. إرسال للديسكورد
-                const formData = new FormData();
-                formData.append('payload_json', JSON.stringify({ content: `🚀 **${name}** قام بميزة نفسه!` }));
-                formData.append('file', file);
-                await fetch(webhook, { method: 'POST', body: formData });
-
-                // 2. الحفظ في المعرض (محلياً للمتصفح)
                 const galleryGrid = document.getElementById('galleryGrid');
-                const card = `<div class="bg-slate-800 p-4 rounded-2xl border border-white/5 fade-in">
-                    <img src="${imgData}" class="w-full h-48 object-cover rounded-xl mb-4">
-                    <p class="font-bold text-center">المبدع: ${name}</p>
-                </div>`;
-                galleryGrid.innerHTML = card + galleryGrid.innerHTML;
+                
+                // إنشاء الكارد مع زر الحذف الإداري
+                const card = document.createElement('div');
+                card.className = "group bg-slate-800 p-4 rounded-3xl border border-white/5 relative fade-in";
+                card.innerHTML = `
+                    <button onclick="deleteDesign(this)" class="admin-only absolute -top-2 -left-2 bg-red-600 text-white w-8 h-8 rounded-full shadow-xl hover:bg-red-700 z-10">✕</button>
+                    <div class="overflow-hidden rounded-2xl mb-4 h-56">
+                        <img src="${imgData}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <p class="font-bold text-lg text-center text-blue-400">${name}</p>
+                `;
+                
+                galleryGrid.prepend(card);
+                
+                // إرسال للديسكورد كإشعار
+                fetch(webhook, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ content: `🎨 المبدع **${name}** أضاف تصميماً جديداً للموقع!` })
+                });
 
-                alert('تم نشر إبداعك!');
+                alert('تم نشر تصميمك بنجاح!');
                 closeModal('showOffModal');
+                document.getElementById('showOffForm').reset();
             };
             reader.readAsDataURL(file);
+        };
+
+        // نموذج الطلب الأساسي
+        document.getElementById('orderForm').onsubmit = async (e) => {
+            e.preventDefault();
+            alert('جاري إرسال الطلب للديسكورد...');
+            closeModal('orderModal');
         };
     </script>
 </body>
